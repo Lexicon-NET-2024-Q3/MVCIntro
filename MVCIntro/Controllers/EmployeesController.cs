@@ -37,6 +37,24 @@ namespace MVCIntro.Controllers
             return View("Index2", await model.ToListAsync());
         }
 
+        public async Task<IActionResult> Search(string searchField)
+        {
+            if (!string.IsNullOrEmpty(searchField))
+            {
+                var results = _context.Employee.Where(e => e.Name.Contains(searchField))
+                    .Select(e => new EmployeeIndexViewModel
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        Department = e.Department
+                    });
+                return View("Index2", await results.ToListAsync());
+            }
+            else
+                return RedirectToAction(nameof(Index)); 
+
+        }
+
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
